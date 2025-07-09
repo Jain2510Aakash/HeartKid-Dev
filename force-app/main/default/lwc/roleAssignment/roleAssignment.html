@@ -1,0 +1,39 @@
+<template>
+    <lightning-card title="">
+        <div class="c-container">
+            <lightning-layout vertical-align="center" class="x-large">
+                <lightning-layout-item flexibility="auto" padding="around-small">
+                    <div class="custom-box">
+                        <lightning-combobox name="object" label="Select Object" placeholder="Object" options={objectVal}
+                            onchange={handleChange}></lightning-combobox>
+                    </div>
+                </lightning-layout-item>
+                <lightning-layout-item flexibility="auto" padding="around-small">
+                    <div class="custom-box">
+                        <lightning-combobox name="field" label="Select field" placeholder="Field" options={fieldVal}
+                            onchange={handleChange}></lightning-combobox>
+                    </div>
+                </lightning-layout-item>
+                <lightning-layout-item flexibility="auto" padding="around-small">
+                    <div class="custom-box">
+                        <lightning-combobox name="fromUser" label="Select Inactive User" placeholder="From User"
+                            options={fromUsersList} onchange={handleChange}></lightning-combobox>
+                    </div>
+                </lightning-layout-item>
+                <lightning-layout-item flexibility="auto" padding="around-small">
+                    <div class="custom-box">
+                        <lightning-combobox name="toUser" label="Select Active User" placeholder="To User"
+                            options={toUserList} onchange={handleChange}></lightning-combobox>
+                    </div>
+                </lightning-layout-item>
+                <lightning-layout-item flexibility="auto" padding="around-small">
+                    <div class="">
+                        <lightning-button variant="brand" label="Transfer Records" title="Transfer Record" 
+                            onclick={handleTransferClick} class="slds-m-left_x-small"  disabled={isTransferDisabled}></lightning-button>
+                    </div>
+                </lightning-layout-item>
+
+            </lightning-layout>
+        </div>
+    </lightning-card>
+</template>
