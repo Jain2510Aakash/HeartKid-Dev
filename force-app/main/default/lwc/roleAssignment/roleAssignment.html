@@ -5,13 +5,13 @@
                 <lightning-layout-item flexibility="auto" padding="around-small">
                     <div class="custom-box">
                         <lightning-combobox name="object" label="Select Object" placeholder="Object" options={objectVal}
-                            onchange={handleChange}></lightning-combobox>
+                            value={objName} onchange={handleChange}></lightning-combobox>
                     </div>
                 </lightning-layout-item>
                 <lightning-layout-item flexibility="auto" padding="around-small">
                     <div class="custom-box">
                         <lightning-combobox name="field" label="Select field" placeholder="Field" options={fieldVal}
-                            onchange={handleChange}></lightning-combobox>
+                            value={fieldName} onchange={handleChange}></lightning-combobox>
                     </div>
                 </lightning-layout-item>
                 <lightning-layout-item flexibility="auto" padding="around-small">

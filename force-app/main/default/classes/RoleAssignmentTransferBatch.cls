@@ -12,6 +12,11 @@ global class RoleAssignmentTransferBatch implements Database.Batchable<SObject> 
         this.fieldName = fieldName;
         this.fromUserId = fromUserId;
         this.toUserId = toUserId;
+        
+        system.debug('objName->'+this.objName);
+        system.debug('fieldName->'+this.fieldName);
+        system.debug('fromUserId->'+this.fromUserId);
+        system.debug('toUserId->'+this.toUserId);
     }
     
     // start method - prepares the query for the batch

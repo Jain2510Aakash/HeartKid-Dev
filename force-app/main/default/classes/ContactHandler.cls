@@ -5,6 +5,7 @@
 *     Change log
 
 *     Author            Date            Description
+*	Aakash Jain			11-July-2025	added logic to update PSRM on contact from latest case
 * ==============================================================================================================================================================
 *
 */
@@ -13,6 +14,9 @@ public class ContactHandler {
 
     public static void afterInsertAndUpdate(Map<Id, Contact> oldMap, Map<Id, Contact> newMap){
         set<Id> contactIds = new Set<Id>();
+        set<Id> newContactIds = new Set<Id>();
+        List<Contact> contactListToUpdatePSRM = new List<Contact>();
+            
         try {
             for (Contact con : newMap.values()) {
                 Boolean isChanged = false;
@@ -22,6 +26,7 @@ public class ContactHandler {
                     if (con.Personal_Connection_to_CHD__c != null) {
                         isChanged = true;
                     }
+                    newContactIds.add(con.Id);
                 } else if (Trigger.isUpdate && oldMap != null && oldMap.containsKey(con.Id)) {
                     Contact oldCon = oldMap.get(con.Id);
                     
@@ -45,6 +50,22 @@ public class ContactHandler {
             system.debug('contactIds->'+contactIds);
             if(!contactIds.isEmpty()){
                 ContactHandlerHelper.fillPrimarySecondaryDetails(contactIds);
+            }
+            if(!newContactIds.isEmpty()){
+                List<Contact> contactListwithcases = [Select Id,Primary_Support_Relationship_Manager__c,(Select Id,OwnerId From Cases order by CreatedDate Desc limit 1) From Contact where ID In : newContactIds ];
+                if(!contactListwithcases.isEmpty()){
+                    for(Contact contactRec : contactListwithcases){
+                        if(contactRec.Cases != null){
+                            Contact conToUpdatePSRM = new Contact();
+                            conToUpdatePSRM.Id = contactRec.Id;
+                            conToUpdatePSRM.Primary_Support_Relationship_Manager__c = contactRec.Cases[0].ownerId;
+                            contactListToUpdatePSRM.add(conToUpdatePSRM);
+                        }
+                    }
+                    if(!contactListToUpdatePSRM.isEmpty()){
+                        database.update(contactListToUpdatePSRM, false);
+                    }
+                }
             }
         } catch (Exception e) {
             System.debug('Error in afterInsertAndUpdate : ' + e.getMessage());

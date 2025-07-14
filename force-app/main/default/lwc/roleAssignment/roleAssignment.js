@@ -1,7 +1,8 @@
-import { LightningElement } from 'lwc';
+import { LightningElement, track } from 'lwc';
 import getActiveStandardUsers from '@salesforce/apex/RoleAssignmentHelper.getActiveStandardUsers';
 import getFromUserList from '@salesforce/apex/RoleAssignmentHelper.getFromUserList';
 import transferRecords from '@salesforce/apex/RoleAssignmentHelper.transferRecords';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class RoleAssignment extends LightningElement {
     objName = '';
@@ -11,6 +12,9 @@ export default class RoleAssignment extends LightningElement {
     parentField = '';
     toUserList = [];
     toUser = '';
+    @track isTransferDisabled = true;
+    prvObjName = '';
+    prvFieldName = '';
 
     connectedCallback() {
         getActiveStandardUsers()
@@ -39,26 +43,39 @@ export default class RoleAssignment extends LightningElement {
         ];
     }
 
-   get isTransferDisabled() {
+    get isTransferDisabled() {
         return !(this.objName && this.fieldName && this.fromUser && this.toUser);
-   }
+    }
 
     handleChange(event) {
-        debugger;
         const name = event.target.name;
         const value = event.detail.value;
+
+        console.log('name', name);
+        console.log('value', value);
 
         if (name === 'object') {
             this.objName = value;
         } else if (name === 'field') {
             this.fieldName = value;
+            this.fromUser = '';
         } else if (name === 'fromUser') {
             this.fromUser = value;
         } else if (name === 'toUser') {
             this.toUser = value;
         }
 
-        if (this.objName && this.fieldName && this.fromUsersList.length === 0) {
+        console.log('name', this.objName);
+        console.log('field', this.fieldName);
+        console.log('fromUser', this.fromUser);
+        console.log('toUser', this.toUser);
+
+        this.isTransferDisabled = !(this.objName && this.fieldName && this.fromUser && this.toUser);
+
+        if (this.objName && this.fieldName && (this.prvObjName !== this.objName || this.prvFieldName !== this.fieldName)) {
+            this.prvObjName = this.objName;
+            this.prvFieldName = this.fieldName;
+
             this.parentField = this.fieldName.includes('__c')
                 ? this.fieldName.replace('__c', '__r')
                 : this.fieldName.replace('Id', '');
@@ -79,11 +96,15 @@ export default class RoleAssignment extends LightningElement {
                 });
         }
     }
+
     handleTransferClick() {
         if (!this.objName || !this.fieldName || !this.fromUser || !this.toUser) {
             alert('Please select all values');
             return;
         }
+
+        this.isTransferDisabled = true;
+
         transferRecords({
             objName: this.objName,
             fieldName: this.fieldName,
@@ -91,18 +112,46 @@ export default class RoleAssignment extends LightningElement {
             toUserid: this.toUser
         })
             .then(result => {
-                this.parentField = this.fieldName.includes('__c') ? this.fieldName.replace('__c', '__r') : this.fieldName.replace('Id', '');
-                this.fromUsersList = result.map(record => {
-                    const related = record[this.parentField];
-                    return {
-                        label: related?.Name || 'Unknown',
-                        value: related?.Id || ''
-                    };
-                });
+                this.parentField = this.fieldName.includes('__c')
+                    ? this.fieldName.replace('__c', '__r')
+                    : this.fieldName.replace('Id', '');
+
+                this.fromUsersList = Array.isArray(result)
+                    ? result.map(record => {
+                        const related = record[this.parentField];
+                        return {
+                            label: related?.Name || 'Unknown',
+                            value: related?.Id || ''
+                        };
+                    })
+                    : [];
+
+                this.dispatchEvent(new ShowToastEvent({
+                    title: 'Success',
+                    message: '✅Records transferring process initiated!!',
+                    variant: 'success'
+                }));
+
                 console.log('Updated fromUsersList:', this.fromUsersList);
             })
             .catch(error => {
                 console.error('Error transferring records:', error);
+                this.dispatchEvent(new ShowToastEvent({
+                    title: 'Error',
+                    message: error.body?.message || 'An error occurred during record transfer.',
+                    variant: 'error'
+                }));
             });
+
+        // Reset form values
+        this.fromUser = '';
+        this.toUser = '';
+        this.objName = '';
+        this.fieldName = '';
+        this.fromUsersList = [];
+        this.parentField = '';
+        this.toUserList = [];
+        this.prvObjName = '';
+        this.prvFieldName = '';
     }
 }

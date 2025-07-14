@@ -15,7 +15,19 @@ public class RoleAssignmentHelper {
             system.debug('query->'+query);
             List<Sobject> sObjectList = Database.query(query);
             system.debug('sObjectList->'+sObjectList.size());
-            return sObjectList;
+            // Use a Map to remove duplicates based on the field value
+            Map<Id, SObject> uniqueMap = new Map<Id, SObject>();
+
+            for (SObject record : sObjectList) {
+                Id fieldValue = (Id) record.get(fieldName);
+                // Only keep one contact per unique fieldValue (e.g., OwnerId)
+                if (!uniqueMap.containsKey(fieldValue)) {
+                    uniqueMap.put(fieldValue, record);
+                }
+            }
+
+            return new List<SObject>(uniqueMap.values());
+
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
