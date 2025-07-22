@@ -15,8 +15,12 @@ export default class RoleAssignment extends LightningElement {
     @track isTransferDisabled = true;
     prvObjName = '';
     prvFieldName = '';
+    @track isLoading = false;
 
     connectedCallback() {
+        this.getActiveStandardUsers();
+    }
+    getActiveStandardUsers() {
         getActiveStandardUsers()
             .then(result => {
                 this.toUserList = result.map(user => ({
@@ -28,13 +32,13 @@ export default class RoleAssignment extends LightningElement {
                 console.error('Error fetching users:', error);
             });
     }
-
     get objectVal() {
         return [
             { label: 'Account', value: 'Account' },
             { label: 'Contact', value: 'Contact' },
         ];
     }
+
 
     get fieldVal() {
         return [
@@ -80,6 +84,7 @@ export default class RoleAssignment extends LightningElement {
                 ? this.fieldName.replace('__c', '__r')
                 : this.fieldName.replace('Id', '');
 
+            this.isLoading = true;
             getFromUserList({ objName: this.objName, fieldName: this.fieldName })
                 .then(result => {
                     this.fromUsersList = result.map(record => {
@@ -90,9 +95,12 @@ export default class RoleAssignment extends LightningElement {
                         };
                     });
                     console.log('fromUsersList:', this.fromUsersList);
+                    this.fromUser = '';
                 })
                 .catch(error => {
                     console.error('Error fetching from user list:', error);
+                }).finally(() => {
+                    this.isLoading = false; // ✅ Hide spinner when done
                 });
         }
     }
@@ -150,7 +158,6 @@ export default class RoleAssignment extends LightningElement {
         this.fieldName = '';
         this.fromUsersList = [];
         this.parentField = '';
-        this.toUserList = [];
         this.prvObjName = '';
         this.prvFieldName = '';
     }

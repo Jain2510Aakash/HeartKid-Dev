@@ -3,7 +3,7 @@
 * Test Class : 
 * Purpose: to fill PSRM on the related contact
 *     Change log
- 
+
 *     Author            Date            Description
 * ==============================================================================================================================================================
 *
@@ -23,26 +23,72 @@ public class CaseTriggerHelper {
             database.update(ContactListToUpdatePSRM, false);
         }
     }
-    public static void afterUpdate(Map<Id,Case> oldMap, Map<Id,Case> newMap){
-        Map<Id,Contact> ContactMapToUpdatePSRM = new Map<Id, Contact>();
-        Set<Id> removedContactIds = new Set<Id>();
-        for(Case caseRec : newMap.values()){
-            if(caseRec.ContactId != null && caseRec.ContactId != oldMap.get(caseRec.Id).ContactId){
-                contact conRecToUpdate = new Contact();
-                conRecToUpdate.Id = caseRec.ContactId;
-                conRecToUpdate.Primary_Support_Relationship_Manager__c = caseRec.ownerId;
-                ContactMapToUpdatePSRM.put(conRecToUpdate.Id, conRecToUpdate);
-                if(oldMap.get(caseRec.Id).ContactId != null)
-                    removedContactIds.add(oldMap.get(caseRec.Id).ContactId);
-            }else if(caseRec.ContactId == null){
-                removedContactIds.add(oldMap.get(caseRec.Id).ContactId);
+    public static void afterUpdate(Map<Id, Case> oldMap, Map<Id, Case> newMap) {
+        Map<Id, Contact> contactMapToUpdate = new Map<Id, Contact>();
+        Set<Id> contactIdsToReevaluate = new Set<Id>();
+        
+        for (Case newCase : newMap.values()) {
+            Case oldCase = oldMap.get(newCase.Id);
+            
+            Boolean contactChanged = newCase.ContactId != oldCase.ContactId;
+            Boolean ownerChanged = newCase.OwnerId != oldCase.OwnerId;
+            system.debug('contactChanged'+contactChanged);
+            system.debug('ownerChanged'+ownerChanged);
+            
+            if (contactChanged) {
+                if (oldCase.ContactId != null) {
+                    contactIdsToReevaluate.add(oldCase.ContactId); // Removed contact
+                }
+                if (newCase.ContactId != null) {
+                    contactIdsToReevaluate.add(newCase.ContactId); // Added or replaced contact
+                }
+            } else if (!contactChanged && ownerChanged) {
+                contactIdsToReevaluate.add(newCase.ContactId); // Contact added (was null before), owner changed
+            }
+            system.debug('contactIdsToReevaluate'+contactIdsToReevaluate);
+        }
+        
+        if (!contactIdsToReevaluate.isEmpty()) {
+            List<Contact> contacts = [
+                SELECT Id, Primary_Support_Relationship_Manager__c,
+                (SELECT Id, OwnerId FROM Cases ORDER BY CreatedDate DESC LIMIT 1)
+                FROM Contact
+                WHERE Id IN :contactIdsToReevaluate
+            ];
+            system.debug('contacts->'+contacts);
+            
+            for (Contact con : contacts) {
+                Contact conToUpdate = new Contact(Id = con.Id);
+                if (!con.Cases.isEmpty()) {
+                    conToUpdate.Primary_Support_Relationship_Manager__c = con.Cases[0].OwnerId;
+                } else {
+                    conToUpdate.Primary_Support_Relationship_Manager__c = null;
+                }
+                contactMapToUpdate.put(conToUpdate.Id, conToUpdate);
+            }
+            system.debug('contactMapToUpdate->'+contactMapToUpdate);
+            if (!contactMapToUpdate.isEmpty()) {
+                Database.update(contactMapToUpdate.values(), false);
             }
         }
-        if(!removedContactIds.isEmpty()){
-            List<Contact> removedContactList = [Select Id,Primary_Support_Relationship_Manager__c,(Select Id,OwnerId From Cases order by CreatedDate Desc limit 1) From Contact where Id in: removedContactIds];
-            if(!removedContactList.isEmpty()){
-                for(Contact con : removedContactList){
-                    system.debug('removedContactList->'+removedContactList);
+    }
+    
+    public static void afterDelete(Map<Id, Case> caseOldMap, Map<Id, Case> caseNewMap){
+        Map<Id,Contact> ContactMapToUpdatePSRM = new Map<Id, Contact>();
+        set<Id> contactIdSet = new set<Id>();
+        
+        for(Case caseRec : caseOldMap.values()){
+            if(caseRec.ContactId != null){
+                contactIdSet.add(caseRec.ContactId);
+            }
+        }
+        system.debug('contactIdSet'+contactIdSet);
+        if(!contactIdSet.isEmpty()){
+            List<Contact> contactList = [Select Id,Primary_Support_Relationship_Manager__c,(Select Id,OwnerId From Cases order by CreatedDate Desc limit 1) From Contact where Id in: contactIdSet];
+            system.debug('contactList'+contactList);
+            if(!contactList.isEmpty()){
+                for(Contact con : contactList){
+                    system.debug('contactList->'+contactList);
                     system.debug('con.Cases->'+con.Cases);
                     if(con.Cases != null && !con.Cases.isEmpty()){
                         contact conRecToUpdate = new Contact();

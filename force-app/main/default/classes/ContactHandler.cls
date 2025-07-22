@@ -11,12 +11,13 @@
 */
 public class ContactHandler {
     public static Boolean isMerging = false;
-
+    
     public static void afterInsertAndUpdate(Map<Id, Contact> oldMap, Map<Id, Contact> newMap){
+        system.debug('afterInsertAndUpdate in contacthandler');
         set<Id> contactIds = new Set<Id>();
         set<Id> newContactIds = new Set<Id>();
         List<Contact> contactListToUpdatePSRM = new List<Contact>();
-            
+        
         try {
             for (Contact con : newMap.values()) {
                 Boolean isChanged = false;
@@ -75,7 +76,9 @@ public class ContactHandler {
     
     
     public static void afterUpdate(Map<Id, Contact> oldMap, Map<Id, Contact> newMap){
+        system.debug('afterUpdate');
         set<Id> contactIdSet = new Set<Id>();
+        set<Id> contactIdSetUpdatedMailingState = new Set<Id>();
         Map<string, string> contactIdByOwnerId = new Map<String, String>();
         
         for (Contact newCon : newMap.Values()) {
@@ -85,9 +88,17 @@ public class ContactHandler {
                 contactIdSet.add(newCon.ID);
                 contactIdByOwnerId.put(newCon.ID, newCon.Ownerid);
             }
+            if(newCon.MailingState != oldCon.MailingState && newCon.MailingState != null){
+                contactIdSetUpdatedMailingState.add(newCon.Id);
+            }
         }
         if(!contactIdSet.isEmpty()){
+            system.debug('Calling createFollowupTaskForSupport1on1');
             ContactHandlerHelper.createFollowupTaskForSupport1on1(contactIdSet, contactIdByOwnerId);
+        }
+        if(!contactIdSetUpdatedMailingState.isEmpty()){
+            system.debug('Calling populatePRMonContact from contact trigger');
+            ContactHandlerHelper.populatePRMonContact(contactIdSetUpdatedMailingState);
         }
     }
 }
