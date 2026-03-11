@@ -888,12 +888,6 @@
                 <elementReference>PRMId</elementReference>
             </value>
         </inputAssignments>
-        <inputAssignments>
-            <field>Secondary_Relationship_Manager__c</field>
-            <value>
-                <elementReference>SRMId</elementReference>
-            </value>
-        </inputAssignments>
         <inputReference>$Record.npsp__Primary_Contact__r</inputReference>
     </recordUpdates>
     <start>
@@ -917,7 +911,7 @@
         </scheduledPaths>
         <triggerType>RecordAfterSave</triggerType>
     </start>
-    <status>Active</status>
+    <status>Obsolete</status>
     <variables>
         <name>IsBequest</name>
         <dataType>Boolean</dataType>

@@ -1,0 +1,4 @@
+<aura:component access="GLOBAL">
+    <c:getInTouchLeadForm />
+	
+</aura:component>

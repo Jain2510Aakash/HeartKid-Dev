@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>HeartKids_with_Birthdays_this_month</fullName>
+    <columns>NAME</columns>
+    <columns>Birthdate__c</columns>
+    <columns>First_Name__c</columns>
+    <columns>Last_Name__c</columns>
+    <columns>Gender__c</columns>
+    <columns>Dependent_Age__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Dependent_Type__c</field>
+        <operation>equals</operation>
+        <value>Heart Kid</value>
+    </filters>
+    <filters>
+        <field>Birthdate__c</field>
+        <operation>equals</operation>
+        <value>THIS_MONTH</value>
+    </filters>
+    <label>HeartKids with Birthdays this month</label>
+</ListView>

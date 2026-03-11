@@ -1,6 +1,6 @@
 <template>
-    <lightning-card title="">
-        
+    <lightning-card title="Bulk Reassign Roles from Inactive to Active Users">
+
         <template if:true={isLoading}>
             <lightning-spinner alternative-text="Loading..." size="medium"></lightning-spinner>
         </template>
@@ -21,9 +21,18 @@
                 <lightning-layout-item flexibility="auto" padding="around-small">
                     <div class="custom-box">
                         <lightning-combobox name="fromUser" label="Select Inactive User" placeholder="From User"
-                           value={fromUser}   options={fromUsersList} onchange={handleChange}></lightning-combobox>
+                            value={fromUser} options={fromUsersList} onchange={handleChange}></lightning-combobox>
                     </div>
                 </lightning-layout-item>
+                <template lwc:if={showMailingState}>
+                    <lightning-layout-item flexibility="auto" padding="around-small">
+                        <div class="custom-box">
+                            <lightning-combobox name="mailingState" label="Select Mailing State"
+                                placeholder="Mailing State" value={mailingState} options={mailingStateVal}
+                                onchange={handleChange}></lightning-combobox>
+                        </div>
+                    </lightning-layout-item>
+                </template>
                 <lightning-layout-item flexibility="auto" padding="around-small">
                     <div class="custom-box">
                         <lightning-combobox name="toUser" label="Select Active User" placeholder="To User"
@@ -32,8 +41,9 @@
                 </lightning-layout-item>
                 <lightning-layout-item flexibility="auto" padding="around-small">
                     <div class="">
-                        <lightning-button variant="brand" label="Transfer Records" title="Transfer Record" 
-                            onclick={handleTransferClick} class="slds-m-left_x-small"  disabled={isTransferDisabled}></lightning-button>
+                        <lightning-button variant="brand" label="Transfer Records" title="Transfer Record"
+                            onclick={handleTransferClick} class="slds-m-left_x-small" disabled={isTransferDisabled}>
+                        </lightning-button>
                     </div>
                 </lightning-layout-item>
 

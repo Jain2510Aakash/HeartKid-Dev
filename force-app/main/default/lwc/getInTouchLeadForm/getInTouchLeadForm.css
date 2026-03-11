@@ -1,0 +1,120 @@
+.container {
+    display: flex;
+    padding: 40px 80px;
+    background-color: #254238;
+    border-radius: 60px 0 0 60px;
+}
+
+.left {
+    width: 45%;
+    padding-right: 40px;
+}
+
+.left h2 {
+    font-size: 30px;
+    margin-bottom: 16px;
+}
+
+.left .summary {
+    font-size: 19px;
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.contact-block .label {
+    font-weight: bold;
+    margin-top: 18px;
+}
+
+.contact-block p {
+    margin: 6px 0;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 13px;
+}
+
+.right {
+    width: 45%;
+    background-color: #254238 !important;
+}
+
+.form-wrap {
+    padding: 10px 20px;
+    background-color: #254238 !important;
+
+}
+
+.submit-row {
+    text-align: center;
+    margin-top: 18px;
+}
+
+.submit-button {
+    width: 70%;
+}
+
+.white-label {
+    color: white;
+    font-weight: 350;
+    display: block;
+    margin-bottom: -25px;
+    margin-top: 10px;
+}
+
+.consent {
+    margin-top: 30px;
+}
+
+.white-labelCheckbox {
+    color: white;
+
+}
+
+.box1 {
+    text-align: left;
+}
+
+.start-btn {
+    background-color: #00b386;
+    /* green shade */
+    color: black;
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 999px;
+    /* pill shape */
+    font-size: 1rem;
+    cursor: pointer;
+    width: 100%;
+    /* adjust as per need */
+    text-align: center;
+    display: block;
+    margin: 0 auto;
+}
+
+.start-btn:hover {
+    background-color: #00a07a;
+    /* slightly darker on hover */
+}
+
+
+.image-container {
+    display: flex;
+    justify-content: center;
+    /* center horizontally */
+    align-items: center;
+    /* center vertically */
+}
+
+.image-container {
+    display: flex;
+    bottom: 0px;
+    left: 20px;
+    position: fixed;
+}
+
+.logo {
+    max-width: 150px;
+    height: auto;
+    bottom: -350px;
+    left: -560px;
+    border-radius: 5px 0 0 60px;
+    position: relative;
+}

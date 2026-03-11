@@ -1,0 +1,69 @@
+<template>
+    <div class="container">
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
+
+        <!-- Heading -->
+        <div class="heading">
+            <h2 class="summary">Send us an enquiry</h2>
+        </div>
+
+        <!-- Two Column Form -->
+        <div class="form-container">
+            <!-- Left side -->
+            <div class="left">
+                <div class="form-wrap">
+                    <label class="white-label">First name<span style="color: red;">*</span></label>
+                    <lightning-input data-id="firstName" value={firstName} onchange={handleChange}></lightning-input>
+
+                    <label class="white-label">Last name<span style="color: red;">*</span></label>
+                    <lightning-input data-id="lastName" value={lastName} onchange={handleChange}></lightning-input>
+
+                    <label class="white-label">Phone<span style="color: red;">*</span></label>
+                    <lightning-input data-id="phone" value={phone} onchange={handleChange}></lightning-input>
+
+                    <label class="white-label">Email<span style="color: red;">*</span></label>
+                    <lightning-input data-id="email" value={email} onchange={handleChange} type="email"></lightning-input>
+
+                    <label class="white-label-radio">Are you a builder?<span style="color: red;">*</span></label>
+                    <lightning-radio-group name="builder" options={builderOptions} value={value} type="radio"
+                        onchange={handleChange}></lightning-radio-group>
+                </div>
+            </div>
+
+            <!-- Right side -->
+            <div class="right">
+                <div class="form-wrap">
+                    <label class="white-label">Company Name<span style="color: red;">*</span></label>
+                    <lightning-input data-id="Company" value={Company} onchange={handleChange} placeholder="N/A"></lightning-input>
+
+                    <label class="white-label">When are you looking to buy?</label>
+                    <lightning-combobox data-id="lookingtoBuy" value={lookingtoBuy}
+                        placeholder="Make a selection" options={lookingtoBuyOptions} onchange={handleChange}></lightning-combobox>
+
+                    <label class="white-label">What are you looking for?</label>
+                    <lightning-combobox data-id="lookingFor" value={lookingFor} placeholder="Make a selection"
+                        options={lookingForOptions} onchange={handleChange}></lightning-combobox>
+
+                    <label class="white-label">How did you hear about us?</label>
+                    <lightning-combobox data-id="hearUs" value={hearUs} placeholder="Make a selection"
+                        options={hearUsOptions} onchange={handleChange}></lightning-combobox>
+
+                    <div class="consent">
+                        <lightning-input type="checkbox" data-id="consent" checked={consent}
+                            onchange={handleCheckboxChange}></lightning-input>
+                        <label class="white-labelCheckbox">By clicking submit, you agree to your personal
+                            information being collected, held, used and disclosed by us in accordance with our
+                            "Privacy Policy"</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="submit-row">
+            <button class="start-btn" onclick={handleSubmit}>Submit</button>
+        </div>
+    </div>
+</template>

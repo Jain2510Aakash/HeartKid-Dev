@@ -199,7 +199,7 @@ public class ContactHandlerHelper {
                     taskToInsert.ActivityDate = system.Today().addDays(30);
                     taskToInsert.IsReminderSet = true;
                     taskToInsert.ReminderDateTime = system.now().addDays(29);
-                    taskToInsert.OwnerId = contactIdByOwnerId.get(conId);
+                    //taskToInsert.OwnerId = contactIdByOwnerId.get(conId);
                     taskToInsert.RecordTypeId = SupportTaskRT;
                     taskListToInsert.add(taskToInsert);
                 }
@@ -214,7 +214,7 @@ public class ContactHandlerHelper {
         }
     }
     
-    public static void populatePRMonContact (Set<Id> contactIds) {
+    /*public static void populatePRMonContact (Set<Id> contactIds) {
         set<string> usernameSet = new Set<String>();
         List<Contact> contactListToUpdate = new List<Contact>();
         Map<String,String> stateByUsernameMap = new Map<String, String>();
@@ -286,5 +286,5 @@ public class ContactHandlerHelper {
             }
         }
         return username; // fallback if format doesn't match
-    }
+    }*/
 }

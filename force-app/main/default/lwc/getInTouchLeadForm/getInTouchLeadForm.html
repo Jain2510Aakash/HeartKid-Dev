@@ -1,0 +1,78 @@
+<template>
+    <div class="container">
+        <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </template>
+        <div class="left">
+            <h2 class="summary" style="font-size:43px;font-weight: bold;">Get in touch</h2>
+            <p class="summary">Take the first step towards living remarkably. Our team is here to answer your questions
+                and help you find land that'll suit your needs.</p>
+
+            <div class="contact-block">
+                <h2 class="label summary" style="font-size:23px;font-weight: bold;">Contact our team</h2>
+                <p class="address" style="font-size: 19px;">9 Romano Street, Denman Prospect, Australia ACT 2611 AU</p>
+                <p class=" phone" style="font-size: 19px;    text-decoration: underline;">Phone: (+61 2) 6175 3300</p>
+                <p class="email" style="font-size: 19px;     text-decoration: underline;">Email:
+                    sales@denmanprospect.com.au</p>
+                <p class="hours" style="font-size: 19px;">Open 7 days a week from 10am to 4pm</p>
+            </div>
+        </div>
+
+   <div class="image-container">
+        <img src={imageUrl} alt="Corner" class="logo" />
+   </div>
+
+        <div class="right">
+            <div class="form-wrap">
+                <label class="white-label">First Name<span style="color: red;">*</span></label>
+                <lightning-input data-id="firstName" value={firstName} onchange={handleChange}>
+                </lightning-input>
+
+                <label class="white-label">Last Name <span style="color: red;">*</span></label>
+                <lightning-input label="" data-id="lastName" value={lastName} onchange={handleChange}>
+                </lightning-input>
+
+                <label class="white-label">When are you looking to buy? </label>
+                <lightning-combobox data-id="whenToBuy" placeholder="Make a selection" value={whenToBuy}
+                    options={buyOptions} onchange={handleChange}>
+                </lightning-combobox>
+
+                <label class="white-label">Phone <span style="color: red;">*</span></label>
+                <lightning-input label="" data-id="phone" value={phone} onchange={handleChange}>
+                </lightning-input>
+
+                <label class="white-label">Email <span style="color: red;">*</span></label>
+                <lightning-input label="" data-id="email" value={email} onchange={handleChange} type="email" >
+                </lightning-input>
+
+                <label class="white-label">Where did you hear about us? </label>
+                <lightning-combobox label="" data-id="heardFrom" value={heardFrom} placeholder="Make a selection"
+                    options={heardFromOptions} onchange={handleChange}></lightning-combobox>
+
+                <div class="consent">
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-size_1-of-12">
+                            <div class="box">
+                                <lightning-input type="checkbox" label="" data-id="consent" checked={consent}
+                                    onchange={handleCheckboxChange}>
+                                </lightning-input>
+                            </div>
+                        </div>
+                        <div class="slds-col slds-size_11-of-12">
+                            <div class="box1">
+                                <label class="white-labelCheckbox">By clicking submit, you agree to your personal information being collected, held, used and disclosed by us in accordance with our "Privacy Policy"</label>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="submit-row">
+
+                    <button class="start-btn" onclick={handleSubmit} >Start the conversation</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

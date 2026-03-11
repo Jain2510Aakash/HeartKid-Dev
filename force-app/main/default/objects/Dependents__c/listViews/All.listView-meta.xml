@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All</fullName>
+    <columns>NAME</columns>
+    <columns>First_Name__c</columns>
+    <columns>Last_Name__c</columns>
+    <columns>Dependent_Type__c</columns>
+    <columns>Dependent_Age__c</columns>
+    <columns>Gender__c</columns>
+    <columns>Primary_Contact__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Dependent_Type__c</field>
+        <operation>equals</operation>
+        <value>Heart Kid</value>
+    </filters>
+    <filters>
+        <field>Dependent_Age__c</field>
+        <operation>greaterOrEqual</operation>
+        <value>13</value>
+    </filters>
+    <filters>
+        <field>Dependent_Age__c</field>
+        <operation>lessOrEqual</operation>
+        <value>18</value>
+    </filters>
+    <label>All</label>
+</ListView>

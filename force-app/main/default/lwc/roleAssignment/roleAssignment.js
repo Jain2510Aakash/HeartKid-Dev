@@ -9,6 +9,7 @@ export default class RoleAssignment extends LightningElement {
     fieldName = '';
     fromUsersList = [];
     fromUser = '';
+    mailingState = '';
     parentField = '';
     toUserList = [];
     toUser = '';
@@ -16,6 +17,7 @@ export default class RoleAssignment extends LightningElement {
     prvObjName = '';
     prvFieldName = '';
     @track isLoading = false;
+    @track showMailingState = false;
 
     connectedCallback() {
         this.getActiveStandardUsers();
@@ -41,10 +43,33 @@ export default class RoleAssignment extends LightningElement {
 
 
     get fieldVal() {
+        if (this.objName == 'Account') {
+            return [
+                { label: 'PRM', value: 'Primary_Relationship_Manager__c' },
+                { label: 'Owner', value: 'OwnerId' },
+            ];
+        } else if (this.objName == 'Contact') {
+            return [
+                { label: 'PRM', value: 'Primary_Relationship_Manager__c' },
+                { label: 'PSRM', value: 'Primary_Support_Relationship_Manager__c' },
+                { label: 'Owner', value: 'OwnerId' },
+            ];
+        }
+
+    }
+
+    get mailingStateVal() {
         return [
-            { label: 'PRM', value: 'Primary_Relationship_Manager__c' },
-            { label: 'Owner', value: 'OwnerId' },
+            { label: 'WA', value: 'WA' },
+            { label: 'QLD', value: 'QLD' },
+            { label: 'NT', value: 'NT' },
+            { label: 'SA', value: 'SA' },
+            { label: 'NSW', value: 'NSW' },
+            { label: 'ACT', value: 'ACT' },
+            { label: 'VIC', value: 'VIC' },
+            { label: 'TAS', value: 'TAS' }
         ];
+
     }
 
     get isTransferDisabled() {
@@ -52,6 +77,7 @@ export default class RoleAssignment extends LightningElement {
     }
 
     handleChange(event) {
+        debugger;
         const name = event.target.name;
         const value = event.detail.value;
 
@@ -60,13 +86,29 @@ export default class RoleAssignment extends LightningElement {
 
         if (name === 'object') {
             this.objName = value;
+            this.fieldName = '';
+            this.fromUser = '';
+            this.toUser = '';
+            this.mailingState = '';
+            if(this.objName == 'Contact'){
+                this.showMailingState = true;
+            }else{
+                this.showMailingState = false;
+                this.mailingState = '';
+            }
         } else if (name === 'field') {
             this.fieldName = value;
             this.fromUser = '';
+            this.toUser = '';
+            this.mailingState = '';
         } else if (name === 'fromUser') {
             this.fromUser = value;
+            this.toUser = '';
+            this.mailingState = '';
         } else if (name === 'toUser') {
             this.toUser = value;
+        }else if (name === 'mailingState') {
+            this.mailingState = value;
         }
 
         console.log('name', this.objName);
@@ -87,11 +129,10 @@ export default class RoleAssignment extends LightningElement {
             this.isLoading = true;
             getFromUserList({ objName: this.objName, fieldName: this.fieldName })
                 .then(result => {
-                    this.fromUsersList = result.map(record => {
-                        const related = record[this.parentField];
+                    this.fromUsersList = result.map(user => {
                         return {
-                            label: related?.Name || 'Unknown',
-                            value: related?.Id || ''
+                            label: user.Name,
+                            value: user.Id
                         };
                     });
                     console.log('fromUsersList:', this.fromUsersList);
@@ -99,8 +140,9 @@ export default class RoleAssignment extends LightningElement {
                 })
                 .catch(error => {
                     console.error('Error fetching from user list:', error);
-                }).finally(() => {
-                    this.isLoading = false; // ✅ Hide spinner when done
+                })
+                .finally(() => {
+                    this.isLoading = false; // Hide spinner when done
                 });
         }
     }
@@ -117,7 +159,8 @@ export default class RoleAssignment extends LightningElement {
             objName: this.objName,
             fieldName: this.fieldName,
             fromUserId: this.fromUser,
-            toUserid: this.toUser
+            toUserid: this.toUser,
+            mailingState: this.mailingState
         })
             .then(result => {
                 this.parentField = this.fieldName.includes('__c')
@@ -160,5 +203,7 @@ export default class RoleAssignment extends LightningElement {
         this.parentField = '';
         this.prvObjName = '';
         this.prvFieldName = '';
+        this.mailingState = '';
+        this.toUser = '';
     }
 }

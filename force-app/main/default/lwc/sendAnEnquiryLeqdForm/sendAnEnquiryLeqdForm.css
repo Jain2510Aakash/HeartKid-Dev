@@ -1,0 +1,84 @@
+.container {
+    padding: 40px 80px;
+    background-color: #254238; /* dark green */
+    border-radius: 60px 0 0 60px;
+    text-align: center;
+}
+
+.heading {
+    margin-bottom: 30px;
+}
+
+.heading .summary {
+    font-size: 28px;
+    font-weight: bold;
+    color: white;
+}
+
+.form-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.left, .right {
+    width: 45%;
+}
+
+.form-wrap {
+    padding: 10px 20px;
+    background-color: #254238;
+}
+
+.white-label {
+    color: white;
+    font-weight: 350;
+    display: block;
+    margin-top: 12px;
+    margin-bottom: -25px;
+}
+.white-label-radio {
+    color: white;
+    font-weight: 350;
+    display: block;
+    margin-top: 12px;
+    margin-bottom: -10px;
+}
+
+.white-labelCheckbox {
+    color: white;
+    font-size: 13px;
+    line-height: 1.4;
+    margin-left: 8px;
+}
+
+.consent {
+    margin-top: 25px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.start-btn {
+    background-color: #00b386;
+    color: black;
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 999px;
+    font-size: 1rem;
+    cursor: pointer;
+    width: 100%;
+    max-width: 250px;
+    text-align: center;
+    display: block;
+    margin: 0 auto;
+}
+
+.start-btn:hover {
+    background-color: #00a07a;
+}
+
+/* Force radio text to be white */
+.slds-radio .slds-form-element__label {
+    color: white !important;
+}
